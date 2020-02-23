@@ -13,22 +13,22 @@ import weka.core.converters.ArffLoader;
 public class OAClassifyApplication {
     public static void main(String[] args)throws Exception {
         Classifier m_classifier = new NaiveBayes();//RandomForest()
-        File inputFile = new File("/Users/xiaoxiangyuzhu/Desktop/project/testdata/oa.arff");//训练语料文件
+        File inputFile = new File("/Users/xiaoxiangyuzhu/Desktop/project/testdata/labor.arff");//训练语料文件
         ArffLoader atf = new ArffLoader();
         atf.setFile(inputFile);
         Instances instancesTrain = atf.getDataSet(); // 读入训练文件
-        inputFile = new File("/Users/xiaoxiangyuzhu/Desktop/project/testdata/oa_test.arff");//测试语料文件
+        inputFile = new File("/Users/xiaoxiangyuzhu/Desktop/project/testdata/labor_test.arff");//测试语料文件
         atf.setFile(inputFile);
         Instances instancesTest = atf.getDataSet(); // 读入测试文件
-        instancesTest.setClassIndex(0); //设置分类属性所在行号（第一行为0号），instancesTest.numAttributes()可以取得属性总数instancesTrain.numAttributes()-1
+        instancesTest.setClassIndex(instancesTrain.numAttributes()-1); //设置分类属性所在行号（第一行为0号），属性总数instancesTrain.numAttributes()-1
         double sum = instancesTest.numInstances();//测试语料实例数
         double right = 0.0f;
-        instancesTrain.setClassIndex(0);
+        instancesTrain.setClassIndex(instancesTrain.numAttributes()-1);
         m_classifier.buildClassifier(instancesTrain); //训练
         System.out.println(m_classifier);
 
         // 保存模型
-        SerializationHelper.write("LibSVM.model", m_classifier);//参数一为模型保存文件，classifier4为要保存的模型
+        SerializationHelper.write("target/classifier.model", m_classifier);//参数一为模型保存文件，classifier4为要保存的模型
 
         for(int  i = 0;i<sum;i++)//测试分类结果  1
         {
@@ -39,7 +39,7 @@ public class OAClassifyApplication {
         }
 
         // 获取上面保存的模型
-        Classifier classifier8 = (Classifier) weka.core.SerializationHelper.read("LibSVM.model");
+        Classifier classifier8 = (Classifier) weka.core.SerializationHelper.read("target/classifier.model");
         double right2 = 0.0f;
         for(int  i = 0;i<sum;i++)//测试分类结果  2 (通过)
         {
