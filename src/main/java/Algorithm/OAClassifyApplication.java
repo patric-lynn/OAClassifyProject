@@ -29,7 +29,7 @@ public class OAClassifyApplication {
 
         // 保存模型
         SerializationHelper.write("target/classifier.model", m_classifier);//参数一为模型保存文件，classifier4为要保存的模型
-
+        // 获取上面保存的模型
         for(int  i = 0;i<sum;i++)//测试分类结果  1
         {
             if(m_classifier.classifyInstance(instancesTest.instance(i))==instancesTest.instance(i).classValue())//如果预测值和答案值相等（测试语料中的分类列提供的须为正确答案，结果才有意义）
@@ -37,19 +37,7 @@ public class OAClassifyApplication {
                 right++;//正确值加1
             }
         }
-
-        // 获取上面保存的模型
-        Classifier classifier8 = (Classifier) weka.core.SerializationHelper.read("target/classifier.model");
-        double right2 = 0.0f;
-        for(int  i = 0;i<sum;i++)//测试分类结果  2 (通过)
-        {
-            if(classifier8.classifyInstance(instancesTest.instance(i))==instancesTest.instance(i).classValue())//如果预测值和答案值相等（测试语料中的分类列提供的须为正确答案，结果才有意义）
-            {
-                right2++;//正确值加1
-            }
-        }
         System.out.println(right);
-        System.out.println(right2);
         System.out.println(sum);
         System.out.println("RandomForest classification precision:"+(right/sum));
     }
