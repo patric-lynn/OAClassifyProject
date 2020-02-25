@@ -8,7 +8,7 @@ import weka.core.converters.CSVLoader;
 
 public class CsvToArff {
 
-    public static void arff(String sourceFile, String targetFile, int column)
+    public static void arff(String sourceFile, String targetFile)
     {
         try
         {

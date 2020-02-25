@@ -7,7 +7,6 @@ import weka.classifiers.Classifier;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.lazy.IBk;
 import weka.classifiers.trees.RandomForest;
-import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ArffLoader;
@@ -17,9 +16,9 @@ import weka.filters.unsupervised.attribute.StringToWordVector;
 
 public class OAClassifyApplication {
 
-    private static String trainName = "/Users/xiaoxiangyuzhu/Desktop/project/testdata/labor.arff";
-    private static String testName = "/Users/xiaoxiangyuzhu/Desktop/project/testdata/labor_test.arff";
-    private static String fileName = "/Users/xiaoxiangyuzhu/Desktop/project/testdata/labor_classify.arff";
+    private static String trainName = "data/labor.arff";
+    private static String testName = "data/labor_test.arff";
+    private static String fileName = "data/labor_classify.arff";
 
     //读取生arff文件,将内容传入实例instances
     public static Instances getRawInstancesByFilename(String filename) throws IOException {
@@ -51,13 +50,13 @@ public class OAClassifyApplication {
     }
 
     //训练并保存模型
-    public static void trainModel(Instances instances, Instances instancesTest, Classifier classifier, String modelname) throws Exception {
+    public static void trainModel(Instances instancesTrain, Instances instancesTest, Classifier classifier, String modelname) throws Exception {
         try {
             //训练：设置类标位置
-            instances.setClassIndex(0);
+            instancesTrain.setClassIndex(0);
             instancesTest.setClassIndex(0); //设置分类属性所在行号（第一行为0号），属性总数instancesTrain.numAttributes()-1
             //训练模型
-            classifier.buildClassifier(instances);
+            classifier.buildClassifier(instancesTrain);
             //保存模型
             SerializationHelper.write("target/" + modelname + ".model", classifier);
 
@@ -85,15 +84,21 @@ public class OAClassifyApplication {
         try {
             Instances instancesRaw = getRawInstancesByFilename(fileName);
             Instances instances = getOldInstancesByRaw(instancesRaw);
-            double sum = instances.numInstances();
+            instancesRaw.setClassIndex(0);
+            instances.setClassIndex(0);
+            int sum = instances.numInstances();
             for (int i = 0; i < sum; i++)//测试分类结果
             {
-                instancesRaw.instance(i).setClassValue(classifier.classifyInstance(instances.instance(i)));
+                instances.instance(i).setClassValue(classifier.classifyInstance(instances.instance(i)));
+                instancesRaw.instance(i).setClassValue(instances.instance(i).classValue());
             }
+            //System.out.println(instances);
+            System.out.println(instancesRaw);
             ArffSaver saver = new ArffSaver();
             saver.setInstances(instancesRaw);
             saver.setFile(new File(fileName));
             saver.writeBatch();
+            System.out.println("成功分类，结果已保存于"+fileName);
         } catch (Exception e) {
             System.err.println(e.getStackTrace());
         }
@@ -106,7 +111,7 @@ public class OAClassifyApplication {
         //定义多个分类模型
         Classifier m_classifier = new MultilayerPerceptron();
         Classifier r_classifier = new RandomForest();
-        Classifier i_classifier = new IBk(3);
+        Classifier i_classifier = new IBk(5);
 
         //获取并处理训练文件：StringtoWordVector
         Instances instancesTrainRaw = getRawInstancesByFilename(trainName);
@@ -119,7 +124,7 @@ public class OAClassifyApplication {
         //训练模型并输出模型及效果
         //trainModel(instancesTrain, instancesTest, m_classifier, "MultilayerPerceptron");
         trainModel(instancesTrain, instancesTest, r_classifier, "RandomForest");
-        //trainModel(instancesTrain, instancesTest, i_classifier, "IBk-3");
+        //trainModel(instancesTrain, instancesTest, i_classifier, "IBk");
 
         //进行实际分类
         classifyFile(r_classifier, fileName);
