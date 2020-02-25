@@ -2,7 +2,6 @@ package Algorithm;
 
 import java.io.File;
 import java.io.IOException;
-
 import weka.classifiers.Classifier;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.lazy.IBk;
