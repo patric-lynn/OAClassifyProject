@@ -52,8 +52,10 @@ public class ExcelToCsv {
 
                     cellData = ((String) getCellFormatValue(row.getCell(j)));
 
-                    if(cellData.equals("")|| cellData==null){
+                    if(cellData.equals("")|| cellData==null||j==0){
                         cellData="?,";
+                    }else if(j==2){
+                        continue;
                     }
                     buffer += cellData;
                 }

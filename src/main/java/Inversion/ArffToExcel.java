@@ -22,11 +22,8 @@ public class ArffToExcel {
      * @param excelFilePath
      */
     public void ArffToExcel(String arffFilePath,String  excelFilePath){
-        //创建一个HSSF,对应一个excel
         HSSFWorkbook workbook = new HSSFWorkbook();
-        //在webbook中添加一个sheet,对应Excel文件中的sheet
         HSSFSheet sheet = workbook.createSheet("重要分类表");
-        //在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
         HSSFRow row = sheet.createRow((int) 0);
         //创建单元格，并设置值表头 设置表头居中
         HSSFCellStyle style = workbook.createCellStyle();
@@ -134,11 +131,5 @@ public class ArffToExcel {
             e.printStackTrace();
         }
         return arrayList;
-    }
-
-    public static void main(String[] args) {
-        String arffFile="D:/Documents/WeChat Files/haozichen549787212/FileStorage/File/2020-02/zmz/transFile.arff";
-        String excelFile="D:/Documents/WeChat Files/haozichen549787212/FileStorage/File/2020-02/zmz/hzc.xls";
-        new ArffToExcel().ArffToExcel(arffFile,excelFile);
     }
 }
