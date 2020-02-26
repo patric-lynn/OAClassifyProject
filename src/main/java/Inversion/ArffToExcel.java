@@ -24,7 +24,7 @@ public class ArffToExcel {
     public void ArffToExcel(String arffFilePath,String  excelFilePath){
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("重要分类表");
-        HSSFRow row = sheet.createRow((int) 0);
+        HSSFRow row ;
         //创建单元格，并设置值表头 设置表头居中
         HSSFCellStyle style = workbook.createCellStyle();
         style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
@@ -34,12 +34,14 @@ public class ArffToExcel {
         while(start<res.size() &&(res.get(start).trim().startsWith("@")||res.get(start).trim().equals("")))
             start++;
 
-        String[] cellArray = res.get(start++).split(",");
-        for(int i=0;i<cellArray.length;i++){
-            HSSFCell cell=row.createCell(i);
-            cell.setCellValue(cellArray[i]);
-            cell.setCellStyle(style);
-        }
+        //列标题
+//        String[] cellArray = res.get(start++).split(",");
+//        for(int i=0;i<cellArray.length;i++){
+//            HSSFCell cell=row.createCell(i);
+//            cell.setCellValue(cellArray[i]);
+//            cell.setCellStyle(style);
+//        }
+
 //        勿删
 //        HSSFCell cell = row.createCell(0);
 //        cell.setCellValue("重要程度");
@@ -89,7 +91,7 @@ public class ArffToExcel {
 
         for (int i=0; start < end; start++,i++)
         {
-            row = sheet.createRow((int) i + 1);
+            row = sheet.createRow((int) i );
             String[] rows=res.get(start).split(",");
             for(int j=0;j<rows.length;j++){
                 row.createCell(j).setCellValue(rows[j]);

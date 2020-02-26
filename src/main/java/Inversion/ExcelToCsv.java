@@ -46,16 +46,15 @@ public class ExcelToCsv {
             row = sheet.getRow(0);
             //获取最大列数
             int colnum = row.getPhysicalNumberOfCells();
-            for (int i = 0; i < rownum; i++) {
+            for (int i = 1; i < rownum; i++) {
                 row = sheet.getRow(i);
                 for (int j = 0; j < colnum; j++) {
 
                     cellData = ((String) getCellFormatValue(row.getCell(j)));
-
-                    if(cellData.equals("")|| cellData==null||j==0){
-                        cellData="?,";
-                    }else if(j==2){
+                    if(j==2){
                         continue;
+                    } else if(cellData.equals("")|| cellData==null||j==0){
+                        cellData="?,";
                     }
                     buffer += cellData;
                 }
