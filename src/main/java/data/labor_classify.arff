@@ -1,17 +1,17 @@
-@relation oa-importance
+@relation 'oa-importance'
 
-@attribute class {general,important}
-@attribute from_code string
-@attribute from_agency string
-@attribute name string
-@attribute wenzhong numeric
-@attribute wenhao numeric
-@attribute date1 date yyyy-MM-dd
-@attribute date2 date yyyy-MM-dd
-@attribute to_1 string
-@attribute to_2 string
-@attribute date0_day date yyyy-MM-dd
-@attribute date0_time date HH:mm
+@attribute 'class' {'important','general'}
+@attribute 'from_code' string
+@attribute 'from_agency' string
+@attribute 'name' string
+@attribute 'wenzhong' numeric
+@attribute 'wenhao' numeric
+@attribute 'date1' date "yyyy-MM-dd"
+@attribute 'date2' date "yyyy-MM-dd"
+@attribute 'to_1' string
+@attribute 'to_2' string
+@attribute 'date0_day' date "yyyy-MM-dd"
+@attribute 'date0_time' date "HH:mm"
 
 @data
 ?,中发[2018]32号,中办,中共中央国务院关于完善促进消费体制机制进一步激发居民消费潜力的若干意见,0,627,?,?,校长办公室,?,2018-09-27,15:43

@@ -22,7 +22,7 @@ public class CsvToArff {
             out.write("@relation" + "  \'oa-importance\'");
             out.newLine();
             //属性声明
-            out.write("@attribute" + " \'class\'"+" {'general','important'}");
+            out.write("@attribute" + " \'class\'"+" {'important','general'}");
             out.newLine();
             out.write("@attribute" + " \'from_code\'"+" string");
             out.newLine();

@@ -1,5 +1,5 @@
 @relation 'oa-importance'
-@attribute 'class' {'general','important'}
+@attribute 'class' {'important','general'}
 @attribute 'from_code' string
 @attribute 'from_agency' string
 @attribute 'name' string
