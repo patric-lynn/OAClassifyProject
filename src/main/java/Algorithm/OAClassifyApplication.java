@@ -25,6 +25,7 @@ public class OAClassifyApplication {
     private static String testName = "src\\main\\java\\data\\labor_test.arff";
     private static String classifyFile = "src\\main\\java\\data\\labor_classify.arff";
     private static String classifiedFile = "src\\main\\java\\data\\labor_classified.arff";
+    //private static String Logistic = "target\\J48.model";
 
     //读取生arff文件,将内容传入实例instances
     public static Instances getRawInstancesByFilename(String filename) throws IOException {
@@ -49,10 +50,10 @@ public class OAClassifyApplication {
 //            dateToNumeric.setInputFormat(ins);
 //            ins = Filter.useFilter(ins, dateToNumeric);
 
-//            //属性正则化
-//            Standardize normalize = new Standardize();
-//            normalize.setInputFormat(ins);
-//            ins = Filter.useFilter(ins, normalize);
+            //属性正则化
+            Standardize normalize = new Standardize();
+            normalize.setInputFormat(ins);
+            ins = Filter.useFilter(ins, normalize);
 
             //将字符串属性变为wordtovector
             StringToWordVector filter = new StringToWordVector();
@@ -75,6 +76,7 @@ public class OAClassifyApplication {
             ClassBalancer filter0 = new ClassBalancer();
             filter0.setInputFormat(instancesTrain);
             instancesTrain = Filter.useFilter(instancesTrain, filter0);
+            //System.out.println(instancesTrain);
 
             //训练模型
             classifier.buildClassifier(instancesTrain);
@@ -83,8 +85,9 @@ public class OAClassifyApplication {
             Evaluation evaluation = new Evaluation(instancesTrain);
             evaluation.crossValidateModel(classifier, instancesTrain, 10, new Random(1234));
             System.out.println(evaluation.toMatrixString());
-            System.out.println("正例的Recall值为"+evaluation.recall(0));
-            System.out.println("正例的F1值为"+evaluation.fMeasure(0));
+            System.out.println("正例的precision值为:"+evaluation.precision(0));
+            System.out.println("正例的Recall值为:   "+evaluation.recall(0));
+            System.out.println("正例的F1值为:       "+evaluation.fMeasure(0));
             System.out.println(evaluation.toSummaryString());
 
             //保存模型
@@ -158,12 +161,15 @@ public class OAClassifyApplication {
 
 
         //trainModel(instancesTrain, instancesTest, i_classifier, "IBk");
-        trainModel(instancesTrain, instancesTest, l_classifier, "Logistic");
+        //trainModel(instancesTrain, instancesTest, l_classifier, "Logistic");
         //trainModel(instancesTrain, instancesTest, r_classifier, "RandomForest");
-        //trainModel(instancesTrain, instancesTest, j_classifier, "J48");
+        trainModel(instancesTrain, instancesTest, j_classifier, "J48");
         //trainModel(instancesTrain, instancesTest, m_classifier, "MultilayerPerceptron");
 
         //进行实际分类
-        //classifyFile(l_classifier, classifyFile, classifiedFile);
+//        Classifier ll_classifier = (Classifier) SerializationHelper.read(Logistic);
+//        System.out.println("已获取");
+        classifyFile(j_classifier, classifyFile, classifiedFile);
+        System.out.println("已写入");
     }
 }
