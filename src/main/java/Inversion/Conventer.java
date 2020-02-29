@@ -9,8 +9,8 @@ public class Conventer {
 
     private static String sourceFile = "src\\main\\java\\data\\conventer\\pre.xls";
     private static String csvFile = "src\\main\\java\\data\\conventer\\inter.csv";
-    private static String classifyFile = "src\\main\\java\\data\\conventer\\classifyFile.arff";
-    private static String classifiedFile = "src\\main\\java\\data\\conventer\\classifiedFile.arff";
+    private static String classifyRealFile = "src\\main\\java\\data\\conventer\\classifyFile.arff";
+    private static String classifiedRealFile = "src\\main\\java\\data\\conventer\\classifiedFile.arff";
     private static String targetFile = "src\\main\\java\\data\\conventer\\post.xls";
 
     private static String IBk = "target\\IBk.model";
@@ -26,7 +26,7 @@ public class Conventer {
             //已转换
             System.out.println("已转换CSV");
 
-            CsvToArff.arff(csvFile, classifyFile);
+            CsvToArff.arff(csvFile, classifyRealFile);
             //已转换
             System.out.println("已转换arff");
 
@@ -37,17 +37,18 @@ public class Conventer {
             //Classifier j_classifier = (Classifier) SerializationHelper.read(J48);
             //trainModel(instancesTrain, instancesTest, m_classifier, "MultilayerPerceptron");
 
-            OAClassifyApplication.classifyFile(l_classifier, classifyFile, classifiedFile);
+            OAClassifyApplication.classifyFile(l_classifier, classifyRealFile, classifiedRealFile);
 
             //转换完成，准备写入Excel
             System.out.println("文件分类完成，准备写入Excel");
 
             //转换Excel
-            new ArffToExcel().ArffToExcel(classifiedFile, targetFile);
+            new ArffToExcel().ArffToExcel(classifiedRealFile, targetFile);
 
             //已写入Excel
             System.out.println("已写入Excel");
         }catch(Exception e){
+            e.printStackTrace();
 
         }
 
