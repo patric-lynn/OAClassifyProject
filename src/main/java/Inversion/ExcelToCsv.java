@@ -51,7 +51,7 @@ public class ExcelToCsv {
                 for (int j = 0; j < colnum; j++) {
 
                     cellData = ((String) getCellFormatValue(row.getCell(j)));
-                    if(j==2){
+                    if(j==2||j==6){
                         continue;
                     } else if(cellData.equals("")|| cellData==null||j==0){
                         cellData="?,";

@@ -166,13 +166,13 @@ public class OAClassifyApplication {
 
     public static void exec(Classifier classifier)throws Exception{
         try {
-//            ExcelToCsv.excelToCsv(sourceFile, csvFile);
-//            //已转换
-//            System.out.println("已转换CSV");
-//
-//            CsvToArff.arff(csvFile, classifyRealFile);
-//            //已转换
-//            System.out.println("已转换arff");
+            ExcelToCsv.excelToCsv(sourceFile, csvFile);
+            //已转换
+            System.out.println("已转换CSV");
+
+            CsvToArff.arff(csvFile, classifyRealFile);
+            //已转换
+            System.out.println("已转换arff");
 
             classifyFile(classifier, classifyRealFile, classifiedRealFile);
 
