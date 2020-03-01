@@ -9,16 +9,9 @@ import Inversion.ExcelToCsv;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
-import weka.classifiers.bayes.NaiveBayesMultinomialText;
 import weka.classifiers.functions.*;
 import weka.classifiers.lazy.IBk;
 import weka.classifiers.meta.AdaBoostM1;
-import weka.classifiers.meta.AdditiveRegression;
-import weka.classifiers.meta.RandomCommittee;
-import weka.classifiers.misc.SerializedClassifier;
-import weka.classifiers.pmml.consumer.NeuralNetwork;
-import weka.classifiers.pmml.consumer.SupportVectorMachineModel;
-import weka.classifiers.rules.PART;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.classifiers.trees.RandomTree;
@@ -33,7 +26,7 @@ import weka.filters.unsupervised.attribute.*;
 
 public class OAClassifyApplication {
 
-    private static String trainName = "src\\main\\java\\data\\labor.arff";
+    private static String trainName = "src\\main\\java\\data\\oa.arff";
     private static String testName = "src\\main\\java\\data\\labor_test.arff";
     private static String classifyFile = "src\\main\\java\\data\\labor_classify.arff";
     private static String classifiedFile = "src\\main\\java\\data\\labor_classified.arff";
@@ -97,7 +90,7 @@ public class OAClassifyApplication {
 
             //交叉验证训练模型:数据准备
             int seed = 1000;
-            int folds = 2;
+            int folds = 5;
             Random rand = new Random(seed);
             instancesTrain = new Instances(instancesTrain);
             instancesTrain.randomize(rand);
@@ -143,8 +136,6 @@ public class OAClassifyApplication {
             int sum = instances.numInstances();
             System.out.println("待分类实例个数为"+sum);
             for (int i = 0; i < sum; i++) {
-//                double[] distribution = classifier.distributionForInstance(instances.instance(i));
-//                System.out.println(distribution);
                 double result = classifier.classifyInstance(instances.instance(i));
                 instances.instance(i).setClassValue(result);
                 System.out.println("第"+i+"个实例已分类");
@@ -157,35 +148,34 @@ public class OAClassifyApplication {
             saver.setInstances(instancesRaw);
             saver.setFile(new File(classifiedFile));
             saver.writeBatch();
-            System.out.println("成功分类，结果已保存于" + classifiedFile);
+            System.out.println("成功分类，结果已读取");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public static void exec(Classifier classifier)throws Exception{
+    public static void exec(Classifier classifier,String preFile,String postFile)throws Exception{//
         try {
-            ExcelToCsv.excelToCsv(sourceFile, csvFile);
+            ExcelToCsv.excelToCsv(preFile, csvFile);
             //已转换
-            System.out.println("已转换CSV");
+            System.out.println("xls已转换CSV文档");
 
             CsvToArff.arff(csvFile, classifyRealFile);
             //已转换
-            System.out.println("已转换arff");
+            System.out.println("已转换为arff开始准备分类");
 
             classifyFile(classifier, classifyRealFile, classifiedRealFile);
 
-            System.out.println("已写入");
 
             //转换完成，准备写入Excel
-            System.out.println("文件分类完成，准备写入Excel");
+            System.out.println("文件重要级别分类完成，准备写入Excel");
 
             //转换Excel
-            new ArffToExcel().ArffToExcel(classifiedRealFile, targetFile);
+            new ArffToExcel().ArffToExcel(classifiedRealFile, postFile);
 
             //已写入Excel
-            System.out.println("已写入Excel");
+            System.out.println("已写入Excel,请查看结果，第一列为类标签");
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -193,6 +183,8 @@ public class OAClassifyApplication {
 
 
     public static void main(String[] args) throws Exception {
+        String preFile = args[0];
+        String postFile = args[1];
 
         //定义多个分类模型
         Classifier a_classifier = new AdaBoostM1();
@@ -219,21 +211,19 @@ public class OAClassifyApplication {
         //训练模型并输出模型及效果
 
 
-        Classifier classifier = trainModel(instancesTrain, instancesTest, rt_classifier, "RandomTree");
+        Classifier classifier = trainModel(instancesTrain, instancesTest, l_classifier, "Logistic");
+//        Classifier classifier = trainModel(instancesTrain, instancesTest, rt_classifier, "RandomTree");
 //        Classifier classifier = trainModel(instancesTrain, instancesTest, r_classifier, "RandomForest");
 //        Classifier classifier = trainModel(instancesTrain, instancesTest, a_classifier, "Ada");
 //        Classifier classifier = trainModel(instancesTrain, instancesTest, i_classifier, "IBk");
-
-        //以下分类器会报错，不建议使用
-//        Classifier classifier = trainModel(instancesTrain, instancesTest, l_classifier, "Logistic");
 //        Classifier classifier = trainModel(instancesTrain, instancesTest, j_classifier, "J48");
 //        Classifier classifier = trainModel(instancesTrain, instancesTest, m_classifier, "MultilayerPerceptron");
-//        Classifier classifier = trainModel(instancesTrain, instancesTest, s_classifier, "smo");
 
+        //模型测试
 //        classifyFile(classifier, classifyFile, classifiedFile);
 //        System.out.println("测试文件已完成分类");
 
-        exec(classifier);
+        exec(classifier,preFile,postFile);//
         System.out.println("文件已完成分类");
     }
 }
