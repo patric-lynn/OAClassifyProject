@@ -26,25 +26,25 @@ import weka.filters.unsupervised.attribute.*;
 
 public class OAClassifyApplication {
     //测试与训练文件
-    private static String trainName = "src\\main\\java\\data\\oa.arff";
-    private static String testName = "src\\main\\java\\data\\oa_test.arff";
+    private static String trainName = "/data/oa.arff";
+    private static String testName = "/data/oa_test.arff";
 //    private static String classifyFile = "src\\main\\java\\data\\oa_classify.arff";
 //    private static String classifiedFile = "src\\main\\java\\data\\oa_classified.arff";
     //实际分类文件
 //    private static String sourceFile = "src\\main\\java\\data\\conventer\\pre.xls";
 //    private static String targetFile = "src\\main\\java\\data\\conventer\\post.xls";
-    private static String csvFile = "src\\main\\java\\data\\conventer\\inter.csv";
-    private static String classifyRealFile = "src\\main\\java\\data\\conventer\\classifyFile.arff";
-    private static String classifiedRealFile = "src\\main\\java\\data\\conventer\\classifiedFile.arff";
+    private static String csvFile = "/data/conventer/inter.csv";
+    private static String classifyRealFile = "/data/conventer/classifyFile.arff";
+    private static String classifiedRealFile = "/data/conventer/classifiedFile.arff";
 
 
     //读取生arff文件,将内容传入实例instances
     public static Instances getRawInstancesByFilename(String filename) throws IOException {
         Instances instances = null;
         try {
-            File file = new File(filename);
+            InputStream in =OAClassifyApplication.class.getResourceAsStream(filename);
             ArffLoader arffLoader = new ArffLoader();
-            arffLoader.setFile(file);
+            arffLoader.setSource(in);
             instances = arffLoader.getDataSet();
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Class-Path: poi-scratchpad-3.10-FINAL-20140208.jar poi-excelant-3.10-F
+ INAL-20140208.jar poi-ooxml-3.10-FINAL-20140208.jar weka.jar poi-exam
+ ples-3.10-FINAL-20140208.jar poi-ooxml-schemas-3.10-FINAL-20140208.ja
+ r poi-3.10-FINAL-20140208.jar
+Main-Class: Algorithm.OAClassifyApplication
+

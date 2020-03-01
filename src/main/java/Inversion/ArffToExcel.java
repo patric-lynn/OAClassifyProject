@@ -21,7 +21,8 @@ public class ArffToExcel {
      * @param arffFilePath
      * @param excelFilePath
      */
-    public void ArffToExcel(String arffFilePath,String  excelFilePath){
+    public static void ArffToExcel(String arffFilePath,String  excelFilePath){
+        System.out.println("AAA");
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("重要分类表");
         HSSFRow row ;
@@ -115,7 +116,7 @@ public class ArffToExcel {
      *
      * @param arffFilePath
      */
-    public List<String> readArff(String arffFilePath){
+    public static List<String> readArff(String arffFilePath){
         // 使用ArrayList来存储每行读取到的字符串
         List<String> arrayList = new ArrayList<String>();
         try {
