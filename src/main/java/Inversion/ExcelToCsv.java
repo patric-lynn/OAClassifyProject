@@ -25,7 +25,7 @@ public class ExcelToCsv {
      * @param newFilePath
      */
     public static void excelToCsv(String oldFilePath, String newFilePath) {
-        System.out.println("start invert...");
+        System.out.println("start invert xls to csv...");
         String buffer = "";
         Workbook wb = null;
         Sheet sheet = null;
@@ -107,7 +107,7 @@ public class ExcelToCsv {
     }
 
     public static Object getCellFormatValue(Cell cell) {
-        System.out.println("start get...");
+        //System.out.println("start get...");
         Object cellValue = null;
         if (cell != null) {
             //判断cell类型

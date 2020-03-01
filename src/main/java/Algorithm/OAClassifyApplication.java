@@ -25,17 +25,18 @@ import weka.filters.supervised.instance.ClassBalancer;
 import weka.filters.unsupervised.attribute.*;
 
 public class OAClassifyApplication {
-
+    //测试与训练文件
     private static String trainName = "src\\main\\java\\data\\oa.arff";
-    private static String testName = "src\\main\\java\\data\\labor_test.arff";
-    private static String classifyFile = "src\\main\\java\\data\\labor_classify.arff";
-    private static String classifiedFile = "src\\main\\java\\data\\labor_classified.arff";
-
-    private static String sourceFile = "src\\main\\java\\data\\conventer\\pre.xls";
+    private static String testName = "src\\main\\java\\data\\oa_test.arff";
+//    private static String classifyFile = "src\\main\\java\\data\\oa_classify.arff";
+//    private static String classifiedFile = "src\\main\\java\\data\\oa_classified.arff";
+    //实际分类文件
+//    private static String sourceFile = "src\\main\\java\\data\\conventer\\pre.xls";
+//    private static String targetFile = "src\\main\\java\\data\\conventer\\post.xls";
     private static String csvFile = "src\\main\\java\\data\\conventer\\inter.csv";
     private static String classifyRealFile = "src\\main\\java\\data\\conventer\\classifyFile.arff";
     private static String classifiedRealFile = "src\\main\\java\\data\\conventer\\classifiedFile.arff";
-    private static String targetFile = "src\\main\\java\\data\\conventer\\post.xls";
+
 
     //读取生arff文件,将内容传入实例instances
     public static Instances getRawInstancesByFilename(String filename) throws IOException {
@@ -52,18 +53,8 @@ public class OAClassifyApplication {
     }
 
     //处理instances格式，使得符合classifier的requisition
-    public static Instances getOldInstancesByRaw(Instances ins) throws Exception {  // throws IOException
+    public static Instances getOldInstancesByRaw(Instances ins) throws Exception {
         try {
-//            //将date属性变为numeric
-//            DateToNumeric dateToNumeric = new DateToNumeric();
-//            dateToNumeric.setInputFormat(ins);
-//            ins = Filter.useFilter(ins, dateToNumeric);
-
-//            //属性正则化
-//            Standardize normalize = new Standardize();
-//            normalize.setInputFormat(ins);
-//            ins = Filter.useFilter(ins, normalize);
-
             //将字符串属性变为wordtovector
             StringToWordVector filter = new StringToWordVector();
             filter.setIDFTransform(true);
@@ -108,9 +99,9 @@ public class OAClassifyApplication {
                 evaluation.evaluateModel(classifier, test);
             }
             System.out.println(evaluation.toMatrixString());
-            System.out.println("正例的precision值为:" + evaluation.precision(0));
-            System.out.println("正例的Recall值为:   " + evaluation.recall(0));
-            System.out.println("正例的F1值为:       " + evaluation.fMeasure(0));
+            System.out.println("class important  precision:" + evaluation.precision(0));
+            System.out.println("class important     Recall:" + evaluation.recall(0));
+            System.out.println("class important F1-Measure:" + evaluation.fMeasure(0));
 
 
             //保存模型
@@ -131,16 +122,16 @@ public class OAClassifyApplication {
             Instances instances = getOldInstancesByRaw(instancesRaw);
             instancesRaw.setClassIndex(0);
             instances.setClassIndex(0);
-            System.out.println("第1个实例的转换后表示为 "+instances.instance(0));
+            //System.out.println("第1个实例的转换后表示为 "+instances.instance(0));//测试
 
             int sum = instances.numInstances();
             System.out.println("待分类实例个数为"+sum);
             for (int i = 0; i < sum; i++) {
                 double result = classifier.classifyInstance(instances.instance(i));
                 instances.instance(i).setClassValue(result);
-                System.out.println("第"+i+"个实例已分类");
+                //System.out.println("第"+i+"个实例已分类");//测试
                 instancesRaw.instance(i).setClassValue(instances.instance(i).classValue());
-                System.out.println("第"+i+"个实例的类别为"+instancesRaw.instance(i).classValue());
+                System.out.println("第"+i+"个实例已分类为"+instancesRaw.instance(i).classValue());
             }
             System.out.println(instancesRaw);
             //写回文件
@@ -148,7 +139,7 @@ public class OAClassifyApplication {
             saver.setInstances(instancesRaw);
             saver.setFile(new File(classifiedFile));
             saver.writeBatch();
-            System.out.println("成功分类，结果已读取");
+            System.out.println("成功对样本文件分类，准备读取结果");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -158,24 +149,20 @@ public class OAClassifyApplication {
     public static void exec(Classifier classifier,String preFile,String postFile)throws Exception{//
         try {
             ExcelToCsv.excelToCsv(preFile, csvFile);
-            //已转换
-            System.out.println("xls已转换CSV文档");
+
+            System.out.println("源文件xls格式已转换为CSV格式");
 
             CsvToArff.arff(csvFile, classifyRealFile);
-            //已转换
-            System.out.println("已转换为arff开始准备分类");
+
+            System.out.println("已转换为arff格式，准备分类");
 
             classifyFile(classifier, classifyRealFile, classifiedRealFile);
 
+            System.out.println("文件分类完成，准备注入Excel");
 
-            //转换完成，准备写入Excel
-            System.out.println("文件重要级别分类完成，准备写入Excel");
-
-            //转换Excel
             new ArffToExcel().ArffToExcel(classifiedRealFile, postFile);
 
-            //已写入Excel
-            System.out.println("已写入Excel,请查看结果，第一列为类标签");
+            System.out.println("已写入Excel,请查看结果，文档第一列为类标签");
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -187,16 +174,13 @@ public class OAClassifyApplication {
         String postFile = args[1];
 
         //定义多个分类模型
+        Classifier l_classifier = new Logistic();
         Classifier a_classifier = new AdaBoostM1();
-        Classifier i_classifier = new IBk(5);
         Classifier r_classifier = new RandomForest();
         Classifier rt_classifier = new RandomTree();
-
-
-        Classifier l_classifier = new Logistic();
+        Classifier i_classifier = new IBk(5);
         Classifier j_classifier = new J48();
         Classifier m_classifier = new MultilayerPerceptron();
-        Classifier s_classifier = new SMO();
 
 
 
@@ -219,7 +203,7 @@ public class OAClassifyApplication {
 //        Classifier classifier = trainModel(instancesTrain, instancesTest, j_classifier, "J48");
 //        Classifier classifier = trainModel(instancesTrain, instancesTest, m_classifier, "MultilayerPerceptron");
 
-        //模型测试
+        //模型测试代码
 //        classifyFile(classifier, classifyFile, classifiedFile);
 //        System.out.println("测试文件已完成分类");
 
