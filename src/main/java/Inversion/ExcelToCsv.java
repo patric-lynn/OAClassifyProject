@@ -18,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class ExcelToCsv {
 
 
+    public static List<Integer> requstIdList=new ArrayList<Integer>();
     /**
      * 将excel表格转成csv格式
      *
@@ -51,9 +52,14 @@ public class ExcelToCsv {
                 for (int j = 0; j < colnum; j++) {
 
                     cellData = ((String) getCellFormatValue(row.getCell(j)));
-                    if(j==2||j==6){
+                    if(j==3||j==7){
                         continue;
-                    } else if(cellData.equals("")|| cellData==null||j==0){
+                    } else if(j==1){
+                        Double d=Double.parseDouble(cellData.split(",")[0]);
+                        Integer a=d!=null?d.intValue():0;
+                        requstIdList.add(a);
+                        continue;
+                    }else if(cellData.equals("")|| cellData==null||j==0){
                         cellData="?,";
                     }
                     buffer += cellData;
@@ -63,7 +69,7 @@ public class ExcelToCsv {
 
             }
 
-            String savePath = newFilePath;
+            String savePath = ExcelToCsv.class.getResource(newFilePath).getPath();
             File saveCSV = new File(savePath);
             try {
                 if (!saveCSV.exists())

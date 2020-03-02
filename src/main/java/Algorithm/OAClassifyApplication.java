@@ -25,7 +25,7 @@ import weka.filters.unsupervised.attribute.*;
 
 public class OAClassifyApplication {
     //测试与训练文件
-    private static String trainName = "/data/oa1.arff";
+    private static String trainName = "/data/oa.arff";
 //    private static String testName = "/data/oa_test.arff";
 //    private static String classifyFile = "src\\main\\java\\data\\oa_classify.arff";
 //    private static String classifiedFile = "src\\main\\java\\data\\oa_classified.arff";

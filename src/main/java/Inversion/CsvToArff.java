@@ -17,7 +17,8 @@ public class CsvToArff {
             BufferedReader in;
             BufferedWriter out;
             String temp;
-            out = new BufferedWriter(new FileWriter(targetFile, false));
+
+            out = new BufferedWriter(new FileWriter( CsvToArff.class.getResource(targetFile).getPath(), false));
             //关系声明
             out.write("@relation" + "  \'oa-importance\'");
             out.newLine();
@@ -51,7 +52,8 @@ public class CsvToArff {
             out.newLine();
             out.newLine();
             //读CSV文件
-            in = new BufferedReader(new FileReader(sourceFile));
+            InputStream inputStream=CsvToArff.class.getResourceAsStream(sourceFile);
+            in = new BufferedReader(new InputStreamReader(inputStream));
             temp = in.readLine();
             while (temp != null)
             {
