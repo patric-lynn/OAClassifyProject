@@ -20,14 +20,13 @@ import weka.core.SerializationHelper;
 import weka.core.converters.ArffLoader;
 import weka.core.converters.ArffSaver;
 import weka.filters.Filter;
-import weka.filters.supervised.attribute.ClassOrder;
 import weka.filters.supervised.instance.ClassBalancer;
 import weka.filters.unsupervised.attribute.*;
 
 public class OAClassifyApplication {
     //测试与训练文件
-    private static String trainName = "/data/oa.arff";
-    private static String testName = "/data/oa_test.arff";
+    private static String trainName = "/data/oa1.arff";
+//    private static String testName = "/data/oa_test.arff";
 //    private static String classifyFile = "src\\main\\java\\data\\oa_classify.arff";
 //    private static String classifiedFile = "src\\main\\java\\data\\oa_classified.arff";
     //实际分类文件
@@ -69,7 +68,7 @@ public class OAClassifyApplication {
 
 
     //训练并保存模型
-    public static Classifier trainModel(Instances instancesTrain, Instances instancesTest, Classifier classifier, String modelname) throws Exception {
+    public static Classifier trainModel(Instances instancesTrain, Classifier classifier, String modelname) throws Exception {//, Instances instancesTest
         try {
             instancesTrain.setClassIndex(0);
             //instancesTest.setClassIndex(0);
@@ -105,7 +104,7 @@ public class OAClassifyApplication {
 
 
             //保存模型
-            SerializationHelper.write("target/" + modelname + ".model", classifier);
+            //SerializationHelper.write("target/" + modelname + ".model", classifier);
             System.out.println("已生成模型");
 
 
@@ -168,6 +167,39 @@ public class OAClassifyApplication {
         }
     }
 
+    public  static void classifyByFile(String preFile, String postFile)throws Exception{
+        try {
+            Classifier l_classifier = new Logistic();
+
+            //获取并处理训练文件：StringtoWordVector
+            Instances instancesTrainRaw = getRawInstancesByFilename(trainName);
+            Instances instancesTrain = getOldInstancesByRaw(instancesTrainRaw);
+
+            Classifier classifier = trainModel(instancesTrain, l_classifier, "Logistic");
+
+            ExcelToCsv.excelToCsv(preFile, csvFile);
+
+            System.out.println("源文件xls格式已转换为CSV格式");
+
+            CsvToArff.arff(csvFile, classifyRealFile);
+
+            System.out.println("已转换为arff格式，准备分类");
+
+
+            classifyFile(classifier, classifyRealFile, classifiedRealFile);
+
+            System.out.println("文件分类完成，准备注入Excel");
+
+            new ArffToExcel().ArffToExcel(classifiedRealFile, postFile);
+
+            System.out.println("已写入Excel,请查看结果，文档第一列为类标签");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
 
     public static void main(String[] args) throws Exception {
         String preFile = args[0];
@@ -188,20 +220,20 @@ public class OAClassifyApplication {
         Instances instancesTrainRaw = getRawInstancesByFilename(trainName);
         Instances instancesTrain = getOldInstancesByRaw(instancesTrainRaw);
 
-        //获取并处理测试文件：StringtoWordVector
-        Instances instancesTestRaw = getRawInstancesByFilename(testName);
-        Instances instancesTest = getOldInstancesByRaw(instancesTestRaw);
+//        //获取并处理测试文件：StringtoWordVector
+//        Instances instancesTestRaw = getRawInstancesByFilename(testName);
+//        Instances instancesTest = getOldInstancesByRaw(instancesTestRaw);
 
         //训练模型并输出模型及效果
 
 
-        Classifier classifier = trainModel(instancesTrain, instancesTest, l_classifier, "Logistic");
-//        Classifier classifier = trainModel(instancesTrain, instancesTest, rt_classifier, "RandomTree");
-//        Classifier classifier = trainModel(instancesTrain, instancesTest, r_classifier, "RandomForest");
-//        Classifier classifier = trainModel(instancesTrain, instancesTest, a_classifier, "Ada");
-//        Classifier classifier = trainModel(instancesTrain, instancesTest, i_classifier, "IBk");
-//        Classifier classifier = trainModel(instancesTrain, instancesTest, j_classifier, "J48");
-//        Classifier classifier = trainModel(instancesTrain, instancesTest, m_classifier, "MultilayerPerceptron");
+        Classifier classifier = trainModel(instancesTrain, l_classifier, "Logistic");//, instancesTest
+//        Classifier classifier = trainModel(instancesTrain, rt_classifier, "RandomTree");
+//        Classifier classifier = trainModel(instancesTrain, r_classifier, "RandomForest");
+//        Classifier classifier = trainModel(instancesTrain, a_classifier, "Ada");
+//        Classifier classifier = trainModel(instancesTrain, i_classifier, "IBk");
+//        Classifier classifier = trainModel(instancesTrain, j_classifier, "J48");
+//        Classifier classifier = trainModel(instancesTrain, m_classifier, "MultilayerPerceptron");
 
         //模型测试代码
 //        classifyFile(classifier, classifyFile, classifiedFile);

@@ -22,7 +22,7 @@ public class ArffToExcel {
      * @param excelFilePath
      */
     public static void ArffToExcel(String arffFilePath,String  excelFilePath){
-        System.out.println("AAA");
+        System.out.println("开始注入excel");
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("重要分类表");
         HSSFRow row ;
