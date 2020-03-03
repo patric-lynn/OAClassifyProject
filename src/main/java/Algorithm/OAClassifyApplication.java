@@ -33,7 +33,7 @@ public class OAClassifyApplication {
 //    private static String sourceFile = "src\\main\\java\\data\\conventer\\pre.xls";
 //    private static String targetFile = "src\\main\\java\\data\\conventer\\post.xls";
     private static String csvFile = "/data/conventer/inter.csv";
-    private static String classifyRealFile = "/data/conventer/classifyFile.arff";
+    public static String classifyRealFile = "/data/conventer/classifyFile.arff";
     private static String classifiedRealFile = "/data/conventer/classifiedFile.arff";
 
 
@@ -44,6 +44,19 @@ public class OAClassifyApplication {
             InputStream in =OAClassifyApplication.class.getResourceAsStream(filename);
             ArffLoader arffLoader = new ArffLoader();
             arffLoader.setSource(in);
+            instances = arffLoader.getDataSet();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return instances;
+    }
+
+    public static Instances getRawInstancesByFilename2(String filename) throws IOException {
+        Instances instances = null;
+        try {
+            File file=new File(filename);
+            ArffLoader arffLoader = new ArffLoader();
+            arffLoader.setFile(file);
             instances = arffLoader.getDataSet();
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,7 +130,7 @@ public class OAClassifyApplication {
     //分类
     public static void classifyFile(Classifier classifier, String classifyFile, String classifiedFile) throws Exception {
         try {
-            Instances instancesRaw = getRawInstancesByFilename(classifyFile);
+            Instances instancesRaw = getRawInstancesByFilename2(classifyFile);
             Instances instances = getOldInstancesByRaw(instancesRaw);
             instancesRaw.setClassIndex(0);
             instances.setClassIndex(0);
@@ -199,11 +212,32 @@ public class OAClassifyApplication {
 
     }
 
+    private static void deleteTempALL() {
+        deleteTemp(csvFile);
+        deleteTemp(classifyRealFile);
+        deleteTemp(classifiedRealFile);
+    }
 
+    private static void deleteTemp(String path) {
+        File file=new File(path);
+        if(file.exists()){
+            file.delete();
+        }
+    }
+    public static void initPath(){
+        String path = OAClassifyApplication.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        File fie=new File(path);
+        String temp=fie.getParent().replaceAll("\\\\","/");
+        csvFile=temp+"/inter.csv";
+        classifyRealFile=temp+"/classifyFile.arff";
+        classifiedRealFile=temp+"/classifiedFile.arff";
 
+    }
     public static void main(String[] args) throws Exception {
         String preFile = args[0];
         String postFile = args[1];
+
+        initPath();
 
         //定义多个分类模型
         Classifier l_classifier = new Logistic();
@@ -241,5 +275,6 @@ public class OAClassifyApplication {
 
         exec(classifier,preFile,postFile);//
         System.out.println("文件已完成分类");
+        deleteTempALL();
     }
 }

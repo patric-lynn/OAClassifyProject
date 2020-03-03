@@ -69,8 +69,7 @@ public class ArffToExcel {
         // 使用ArrayList来存储每行读取到的字符串
         List<String> arrayList = new ArrayList<String>();
         try {
-            InputStream inputStream=CsvToArff.class.getResourceAsStream(arffFilePath);
-            BufferedReader bf = new BufferedReader(new InputStreamReader(inputStream));
+            BufferedReader bf = new BufferedReader(new FileReader(arffFilePath));
             // 按行读取字符串
             String str;
             while ((str = bf.readLine()) != null) {
@@ -82,4 +81,5 @@ public class ArffToExcel {
         }
         return arrayList;
     }
+
 }

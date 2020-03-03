@@ -2,6 +2,7 @@ package Inversion;
 
 import java.io.*;
 
+import Algorithm.OAClassifyApplication;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.CSVLoader;
@@ -18,7 +19,7 @@ public class CsvToArff {
             BufferedWriter out;
             String temp;
 
-            out = new BufferedWriter(new FileWriter( CsvToArff.class.getResource(targetFile).getPath(), false));
+            out = new BufferedWriter(new FileWriter(targetFile, false));
             //关系声明
             out.write("@relation" + "  \'oa-importance\'");
             out.newLine();
@@ -52,8 +53,7 @@ public class CsvToArff {
             out.newLine();
             out.newLine();
             //读CSV文件
-            InputStream inputStream=CsvToArff.class.getResourceAsStream(sourceFile);
-            in = new BufferedReader(new InputStreamReader(inputStream));
+            in = new BufferedReader(new FileReader(sourceFile));
             temp = in.readLine();
             while (temp != null)
             {

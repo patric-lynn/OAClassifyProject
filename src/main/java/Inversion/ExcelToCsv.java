@@ -69,7 +69,7 @@ public class ExcelToCsv {
 
             }
 
-            String savePath = ExcelToCsv.class.getResource(newFilePath).getPath();
+            String savePath = newFilePath;
             File saveCSV = new File(savePath);
             try {
                 if (!saveCSV.exists())
