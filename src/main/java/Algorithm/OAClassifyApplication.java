@@ -80,7 +80,7 @@ public class OAClassifyApplication {
 
             //交叉验证训练模型:数据准备
             int seed = 1000;
-            int folds = 5;
+            int folds = 3;
             Random rand = new Random(seed);
             instancesTrain = new Instances(instancesTrain);
             instancesTrain.randomize(rand);
@@ -227,10 +227,10 @@ public class OAClassifyApplication {
         //训练模型并输出模型及效果
 
 
-        Classifier classifier = trainModel(instancesTrain, l_classifier, "Logistic");//, instancesTest
+//        Classifier classifier = trainModel(instancesTrain, l_classifier, "Logistic");//, instancesTest
 //        Classifier classifier = trainModel(instancesTrain, rt_classifier, "RandomTree");
 //        Classifier classifier = trainModel(instancesTrain, r_classifier, "RandomForest");
-//        Classifier classifier = trainModel(instancesTrain, a_classifier, "Ada");
+        Classifier classifier = trainModel(instancesTrain, a_classifier, "Ada");
 //        Classifier classifier = trainModel(instancesTrain, i_classifier, "IBk");
 //        Classifier classifier = trainModel(instancesTrain, j_classifier, "J48");
 //        Classifier classifier = trainModel(instancesTrain, m_classifier, "MultilayerPerceptron");
