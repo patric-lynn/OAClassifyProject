@@ -110,10 +110,10 @@ public class OAClassifyApplication {
                 classifier = AbstractClassifier.makeCopy(classifier);
                 evaluation.evaluateModel(classifier, test);
             }
-            System.out.println(evaluation.toMatrixString());
-            System.out.println("class important  precision:" + evaluation.precision(0));
-            System.out.println("class important     Recall:" + evaluation.recall(0));
-            System.out.println("class important F1-Measure:" + evaluation.fMeasure(0));
+//            System.out.println(evaluation.toMatrixString());
+//            System.out.println("class important  precision:" + evaluation.precision(0));
+//            System.out.println("class important     Recall:" + evaluation.recall(0));
+//            System.out.println("class important F1-Measure:" + evaluation.fMeasure(0));
 
 
             //保存模型
@@ -182,13 +182,16 @@ public class OAClassifyApplication {
 
     public  static void classifyByFile(String preFile, String postFile)throws Exception{
         try {
-            Classifier l_classifier = new Logistic();
+            //初始化文档路径
+            initPath();
+
+            Classifier i_classifier = new IBk(5);
 
             //获取并处理训练文件：StringtoWordVector
             Instances instancesTrainRaw = getRawInstancesByFilename(trainName);
             Instances instancesTrain = getOldInstancesByRaw(instancesTrainRaw);
 
-            Classifier classifier = trainModel(instancesTrain, l_classifier, "Logistic");
+            Classifier classifier = trainModel(instancesTrain, i_classifier, "IBK");
 
             ExcelToCsv.excelToCsv(preFile, csvFile);
 
@@ -206,6 +209,8 @@ public class OAClassifyApplication {
             new ArffToExcel().ArffToExcel(classifiedRealFile, postFile);
 
             System.out.println("已写入Excel,请查看结果，文档第一列为类标签");
+            //删除临时文件
+            deleteTempALL();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -264,9 +269,8 @@ public class OAClassifyApplication {
 //        Classifier classifier = trainModel(instancesTrain, l_classifier, "Logistic");//, instancesTest
 //        Classifier classifier = trainModel(instancesTrain, rt_classifier, "RandomTree");
 //        Classifier classifier = trainModel(instancesTrain, r_classifier, "RandomForest");
-        Classifier classifier = trainModel(instancesTrain, a_classifier, "Ada");
-//        Classifier classifier = trainModel(instancesTrain, i_classifier, "IBk");
-//        Classifier classifier = trainModel(instancesTrain, j_classifier, "J48");
+//        Classifier classifier = trainModel(instancesTrain, a_classifier, "Ada");
+        Classifier classifier = trainModel(instancesTrain, i_classifier, "IBk");
 //        Classifier classifier = trainModel(instancesTrain, m_classifier, "MultilayerPerceptron");
 
         //模型测试代码

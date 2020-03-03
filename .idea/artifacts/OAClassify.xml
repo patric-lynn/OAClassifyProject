@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="OAClassify">
+    <output-path>$PROJECT_DIR$/out/artifacts/OAClassify</output-path>
+    <root id="archive" name="OAClassify.jar">
+      <element id="module-output" name="OAClassify" />
+      <element id="extracted-dir" path="D:/Software/Weka-3-8/weka.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/main/java/POI/poi-3.10-FINAL-20140208.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/main/java/POI/poi-ooxml-3.10-FINAL-20140208.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/main/java/POI/poi-examples-3.10-FINAL-20140208.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/main/java/POI/poi-excelant-3.10-FINAL-20140208.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/main/java/POI/poi-scratchpad-3.10-FINAL-20140208.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/main/java/POI/poi-ooxml-schemas-3.10-FINAL-20140208.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
